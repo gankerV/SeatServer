@@ -8,7 +8,10 @@ import java.sql.Time;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {
+        "http://localhost:5173",
+        "https://ktpm-lab01-frontend.onrender.com"
+})
 @RestController
 @RequestMapping("/api")
 public class SeatController {
