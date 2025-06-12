@@ -1,17 +1,19 @@
 package com.example.seat.controller;
 
-import com.example.seat.entity.Seat;
-import com.example.seat.service.SeatService;
-import org.springframework.web.bind.annotation.*;
-
 import java.sql.Time;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = {
-        "http://localhost:5173",
-        "https://ktpm-lab01-frontend.onrender.com"
-})
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.seat.entity.Seat;
+import com.example.seat.service.SeatService;
+
 @RestController
 @RequestMapping("/api")
 public class SeatController {
@@ -24,8 +26,8 @@ public class SeatController {
 
     @GetMapping("/seats")
     public List<Seat> getSeatsByTime(
-            @RequestParam String startTime,   // "12:00:00"
-            @RequestParam String endTime      // "14:00:00"
+            @RequestParam String startTime, // "12:00:00"
+            @RequestParam String endTime // "14:00:00"
     ) {
         Time start = Time.valueOf(startTime);
         Time end = Time.valueOf(endTime);
