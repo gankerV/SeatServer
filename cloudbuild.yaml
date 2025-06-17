@@ -13,9 +13,9 @@ steps:
         echo "SPRING_DATASOURCE_PASSWORD=$SPRING_DATASOURCE_PASSWORD"
 
         docker build \
-          --build-arg SPRING_DATASOURCE_URL=$SPRING_DATASOURCE_URL \
-          --build-arg SPRING_DATASOURCE_USERNAME=$SPRING_DATASOURCE_USERNAME \
-          --build-arg SPRING_DATASOURCE_PASSWORD=$SPRING_DATASOURCE_PASSWORD \
+          --build-arg SPRING_DATASOURCE_URL="$SPRING_DATASOURCE_URL" \
+          --build-arg SPRING_DATASOURCE_USERNAME="$SPRING_DATASOURCE_USERNAME" \
+          --build-arg SPRING_DATASOURCE_PASSWORD="$SPRING_DATASOURCE_PASSWORD" \
           -t gcr.io/$PROJECT_ID/seat-service:$SHORT_SHA .
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
