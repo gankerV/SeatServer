@@ -16,7 +16,7 @@ steps:
           -t gcr.io/$PROJECT_ID/seat-service:$SHORT_SHA .
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'bash'
+    entrypoint: bash
     args:
       - -c
       - |
@@ -26,7 +26,10 @@ steps:
 availableSecrets:
   secretManager:
     - versionName: projects/$PROJECT_ID/secrets/seat-env/versions/latest
-      env: ['SPRING_DATASOURCE_URL', 'SPRING_DATASOURCE_USERNAME', 'SPRING_DATASOURCE_PASSWORD']
+      env:
+        - SPRING_DATASOURCE_URL
+        - SPRING_DATASOURCE_USERNAME
+        - SPRING_DATASOURCE_PASSWORD
 
 images:
   - gcr.io/$PROJECT_ID/seat-service:$SHORT_SHA
