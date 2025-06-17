@@ -8,9 +8,14 @@ steps:
         gcloud secrets versions access latest --secret=seat-env > .env
         export $(grep -v '^#' .env | xargs)
 
+        export PROJECT_ID=$PROJECT_ID
+        export SHORT_SHA=$SHORT_SHA
+
         echo "SPRING_DATASOURCE_URL=$$SPRING_DATASOURCE_URL"
         echo "SPRING_DATASOURCE_USERNAME=$$SPRING_DATASOURCE_USERNAME"
         echo "SPRING_DATASOURCE_PASSWORD=$$SPRING_DATASOURCE_PASSWORD"
+        echo "PROJECT_ID=$$PROJECT_ID"
+        echo "SHORT_SHA=$$SHORT_SHA"
 
         docker build \
           --build-arg SPRING_DATASOURCE_URL=$$SPRING_DATASOURCE_URL \
@@ -23,6 +28,9 @@ steps:
     args:
       - -c
       - |
+        export PROJECT_ID=$PROJECT_ID
+        export SHORT_SHA=$SHORT_SHA
+
         gcloud container clusters get-credentials booking-cluster \
           --zone asia-southeast1-a --project $$PROJECT_ID
 
