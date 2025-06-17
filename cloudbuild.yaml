@@ -1,40 +1,33 @@
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: bash
     args:
       - -c
-      - >
-        echo "Loading secrets..." &&
-        echo "$SPRING_DATASOURCE_URL" &&
-        echo "$SPRING_DATASOURCE_USERNAME" &&
-        echo "$SPRING_DATASOURCE_PASSWORD" &&
-        docker build
-          --build-arg SPRING_DATASOURCE_URL="$SPRING_DATASOURCE_URL"
-          --build-arg SPRING_DATASOURCE_USERNAME="$SPRING_DATASOURCE_USERNAME"
-          --build-arg SPRING_DATASOURCE_PASSWORD="$SPRING_DATASOURCE_PASSWORD"
+      - |
+        echo "Loading secrets from Secret Manager..."
+        gcloud secrets versions access latest --secret=seat-env > .env
+        export $(grep -v '^#' .env | xargs)
+
+        echo "SPRING_DATASOURCE_URL=$SPRING_DATASOURCE_URL"
+        echo "SPRING_DATASOURCE_USERNAME=$SPRING_DATASOURCE_USERNAME"
+        echo "SPRING_DATASOURCE_PASSWORD=$SPRING_DATASOURCE_PASSWORD"
+
+        docker build \
+          --build-arg SPRING_DATASOURCE_URL=$SPRING_DATASOURCE_URL \
+          --build-arg SPRING_DATASOURCE_USERNAME=$SPRING_DATASOURCE_USERNAME \
+          --build-arg SPRING_DATASOURCE_PASSWORD=$SPRING_DATASOURCE_PASSWORD \
           -t gcr.io/$PROJECT_ID/seat-service:$SHORT_SHA .
-    secretEnv:
-      - SPRING_DATASOURCE_URL
-      - SPRING_DATASOURCE_USERNAME
-      - SPRING_DATASOURCE_PASSWORD
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: bash
     args:
       - -c
-      - >
-        gcloud container clusters get-credentials booking-cluster
-        --zone asia-southeast1-a --project $PROJECT_ID &&
-        kubectl set image deployment/seat-deployment
-        seat=gcr.io/$PROJECT_ID/seat-service:$SHORT_SHA
+      - |
+        gcloud container clusters get-credentials booking-cluster \
+          --zone asia-southeast1-a --project $PROJECT_ID
 
-availableSecrets:
-  secretManager:
-    - versionName: projects/$PROJECT_ID/secrets/seat-env/versions/latest
-      env:
-        - SPRING_DATASOURCE_URL
-        - SPRING_DATASOURCE_USERNAME
-        - SPRING_DATASOURCE_PASSWORD
+        kubectl set image deployment/seat-deployment \
+          seat=gcr.io/$PROJECT_ID/seat-service:$SHORT_SHA
 
 images:
   - gcr.io/$PROJECT_ID/seat-service:$SHORT_SHA
