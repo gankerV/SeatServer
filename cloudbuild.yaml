@@ -26,13 +26,13 @@ steps:
 availableSecrets:
   secretManager:
     - versionName: projects/$PROJECT_ID/secrets/seat-env/versions/latest
-      env: SPRING_DATASOURCE_URL
-    - versionName: projects/$PROJECT_ID/secrets/seat-env/versions/latest
-      env: SPRING_DATASOURCE_USERNAME
-    - versionName: projects/$PROJECT_ID/secrets/seat-env/versions/latest
-      env: SPRING_DATASOURCE_PASSWORD
+      env:
+        - SPRING_DATASOURCE_URL
+        - SPRING_DATASOURCE_USERNAME
+        - SPRING_DATASOURCE_PASSWORD
 
 images:
   - gcr.io/$PROJECT_ID/seat-service:$SHORT_SHA
+
 options:
   logging: CLOUD_LOGGING_ONLY
