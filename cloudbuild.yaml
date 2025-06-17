@@ -8,15 +8,15 @@ steps:
         gcloud secrets versions access latest --secret=seat-env > .env
         export $(grep -v '^#' .env | xargs)
 
-        echo "SPRING_DATASOURCE_URL=$SPRING_DATASOURCE_URL"
-        echo "SPRING_DATASOURCE_USERNAME=$SPRING_DATASOURCE_USERNAME"
-        echo "SPRING_DATASOURCE_PASSWORD=$SPRING_DATASOURCE_PASSWORD"
+        echo "SPRING_DATASOURCE_URL=\$SPRING_DATASOURCE_URL"
+        echo "SPRING_DATASOURCE_USERNAME=\$SPRING_DATASOURCE_USERNAME"
+        echo "SPRING_DATASOURCE_PASSWORD=\$SPRING_DATASOURCE_PASSWORD"
 
         docker build \
-          --build-arg SPRING_DATASOURCE_URL="$SPRING_DATASOURCE_URL" \
-          --build-arg SPRING_DATASOURCE_USERNAME="$SPRING_DATASOURCE_USERNAME" \
-          --build-arg SPRING_DATASOURCE_PASSWORD="$SPRING_DATASOURCE_PASSWORD" \
-          -t gcr.io/$PROJECT_ID/seat-service:$SHORT_SHA .
+          --build-arg SPRING_DATASOURCE_URL="\$SPRING_DATASOURCE_URL" \
+          --build-arg SPRING_DATASOURCE_USERNAME="\$SPRING_DATASOURCE_USERNAME" \
+          --build-arg SPRING_DATASOURCE_PASSWORD="\$SPRING_DATASOURCE_PASSWORD" \
+          -t gcr.io/\$PROJECT_ID/seat-service:\$SHORT_SHA .
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: bash
@@ -24,10 +24,10 @@ steps:
       - -c
       - |
         gcloud container clusters get-credentials booking-cluster \
-          --zone asia-southeast1-a --project $PROJECT_ID
+          --zone asia-southeast1-a --project \$PROJECT_ID
 
         kubectl set image deployment/seat-deployment \
-          seat=gcr.io/$PROJECT_ID/seat-service:$SHORT_SHA
+          seat=gcr.io/\$PROJECT_ID/seat-service:\$SHORT_SHA
 
 images:
   - gcr.io/$PROJECT_ID/seat-service:$SHORT_SHA
