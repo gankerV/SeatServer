@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: seat-deployment
+  namespace: booking-system
 spec:
   replicas: 1
   selector:

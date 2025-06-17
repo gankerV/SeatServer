@@ -34,8 +34,11 @@ steps:
         gcloud container clusters get-credentials booking-cluster \
           --zone asia-southeast1-a --project $$PROJECT_ID
 
+        kubectl apply -f k8s/seat-deployment.yaml -n booking-system
+        
         kubectl set image deployment/seat-deployment \
-          seat=gcr.io/$$PROJECT_ID/seat-service:$$SHORT_SHA
+          seat=gcr.io/$$PROJECT_ID/seat-service:$$SHORT_SHA \
+          -n booking-system
 
 images:
   - gcr.io/$PROJECT_ID/seat-service:$SHORT_SHA
