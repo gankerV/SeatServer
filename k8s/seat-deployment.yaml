@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: seat
-          image: gcr.io/bookingfilm-463218/seat-service
+          image: cr.io/bookingfilm-463218/seat-service:757fca5
           ports:
             - containerPort: 8080
           env:
